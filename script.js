@@ -1,8 +1,8 @@
 const carousel = document.querySelector('.carousel');
 const prevBtn = carousel.querySelector('.prev');
 const nextBtn = carousel.querySelector('.next');
-const slides = carousel.querySelector('.slides');
-const slideCount = slides.children.length;
+const slidesContainer = carousel.querySelector('.slides');
+const slideCount = slidesContainer.children.length;
 
 let i = 0;
 let busy = false;
@@ -16,10 +16,10 @@ async function rotateLeft() {
   if (busy) {
     if (direction == 'left') {
       rotationsLeft++;
-      slides.style.transitionTimingFunction = 'linear';
+      slidesContainer.style.transitionTimingFunction = 'linear';
     } else {
       rotationsLeft = 0;
-      slides.style.transitionTimingFunction = 'ease-out';
+      slidesContainer.style.transitionTimingFunction = 'ease-out';
     }
     return;
   }
@@ -32,12 +32,12 @@ async function rotateLeft() {
     await rotateTo(i);
 
   } else {
-    slides.append(slides.firstElementChild);
+    slidesContainer.append(slidesContainer.firstElementChild);
 
     await jumpTo(i - 2);
     await rotateTo(i - 1);
   
-    slides.prepend(slides.lastElementChild);
+    slidesContainer.prepend(slidesContainer.lastElementChild);
   
     await jumpTo(i = 0);
   }
@@ -48,13 +48,13 @@ async function rotateLeft() {
     rotationsLeft--;
 
     if (rotationsLeft == 0) {
-      slides.style.transitionTimingFunction = 'ease-out';
+      slidesContainer.style.transitionTimingFunction = 'ease-out';
     }
 
     await rotateLeft();
     
   } else {
-    slides.style.transitionTimingFunction = 'ease-in-out';
+    slidesContainer.style.transitionTimingFunction = null;
   }
 }
 
@@ -62,10 +62,10 @@ async function rotateRight() {
   if (busy) {
     if (direction == 'right') {
       rotationsLeft++;
-      slides.style.transitionTimingFunction = 'linear';
+      slidesContainer.style.transitionTimingFunction = 'linear';
     } else {
       rotationsLeft = 0;
-      slides.style.transitionTimingFunction = 'ease-out';
+      slidesContainer.style.transitionTimingFunction = 'ease-out';
     }
     return;
   }
@@ -78,12 +78,12 @@ async function rotateRight() {
     await rotateTo(i);
 
   } else {
-    slides.prepend(slides.lastElementChild);
+    slidesContainer.prepend(slidesContainer.lastElementChild);
 
     await jumpTo(1);
     await rotateTo(0);
   
-    slides.append(slides.firstElementChild);
+    slidesContainer.append(slidesContainer.firstElementChild);
   
     await jumpTo(i = slideCount - 1);
   }
@@ -94,30 +94,30 @@ async function rotateRight() {
     rotationsLeft--;
 
     if (rotationsLeft == 0) {
-      slides.style.transitionTimingFunction = 'ease-out';
+      slidesContainer.style.transitionTimingFunction = 'ease-out';
     }
     
     await rotateRight();
 
   } else {
-    slides.style.transitionTimingFunction = 'ease-in-out';
+    slidesContainer.style.transitionTimingFunction = null;
   }
 }
 
 async function rotateTo(i) {
   carousel.style.setProperty('--index', i);
 
-  await endTransition(slides);
+  await endTransition(slidesContainer);
 }
 
 async function jumpTo(i) {
-  slides.style.transitionDuration = '0s';
+  slidesContainer.style.transitionDuration = '0s';
   carousel.style.setProperty('--index', i);
 
   await skipFrame();
   await skipFrame();
 
-  slides.style.transitionDuration = null;
+  slidesContainer.style.transitionDuration = null;
 }
 
 function skipFrame() {
